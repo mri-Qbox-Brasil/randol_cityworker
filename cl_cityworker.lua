@@ -9,7 +9,7 @@ SetBlipScale(CITY_BLIP, 0.8)
 SetBlipAsShortRange(CITY_BLIP, true)
 SetBlipColour(CITY_BLIP, 5)
 BeginTextCommandSetBlipName("STRING")
-AddTextComponentSubstringPlayerName("City Worker Job")
+AddTextComponentSubstringPlayerName("Central do Eletricista")
 EndTextCommandSetBlipName(CITY_BLIP)
 
 local function resetJob()
@@ -18,7 +18,7 @@ local function resetJob()
     isHired = false
     activeJob = false
     if DoesEntityExist(cityBoss) then
-        exports['qb-target']:RemoveTargetEntity(cityBoss, {'Start Work', 'Finish Work'})
+        exports['qb-target']:RemoveTargetEntity(cityBoss, {'Começar a trabalhar', 'Terminar o trabalho'})
         DeleteEntity(cityBoss)
         cityBoss = nil
     end
@@ -30,7 +30,7 @@ local function startWork(netid, data)
         if NetworkDoesEntityExistWithNetworkId(netid) then
             return NetToVeh(netid)
         end
-    end, 'Could not load entity in time.', 3000)
+    end, 'Não foi possível carregar entidade no tempo.', 3000)
 
     SetVehicleNumberPlateText(workVehicle, 'CITY'..tostring(math.random(1000, 9999)))
     SetVehicleColours(workVehicle, 111, 111)
@@ -56,7 +56,7 @@ local function finishWork()
 
     local success = lib.callback.await('randol_cityworker:server:clockOut', false)
     if success then
-        DoNotification('You ended your shift.', 'success')
+        DoNotification('Você terminou seu turno.', 'success')
         RemoveBlip(JobBlip)
         isHired, activeJob = false
     end
@@ -64,7 +64,7 @@ end
 
 local function yeetPed()
     if DoesEntityExist(cityBoss) then
-        exports['qb-target']:RemoveTargetEntity(cityBoss, {'Start Work', 'Finish Work'})
+        exports['qb-target']:RemoveTargetEntity(cityBoss, {'Começar a trabalhar', 'Terminar o trabalho'})
         DeleteEntity(cityBoss)
         cityBoss = nil
     end
@@ -86,7 +86,7 @@ local function spawnPed()
         options = {
             {
                 icon = 'fa-solid fa-clipboard-list',
-                label = 'Start Work',
+                label = 'Começar a trabalhar',
                 action = function()
                     local netid, data = lib.callback.await('randol_cityworker:server:spawnVehicle', false)
                     if netid and data then
@@ -99,7 +99,7 @@ local function spawnPed()
             },
             {
                 icon = 'fa-solid fa-clipboard-check',
-                label = 'Finish Work',
+                label = 'Terminar o trabalho',
                 action = function()
                     finishWork()
                 end,
@@ -119,7 +119,7 @@ local function repairSpot()
     if lib.progressCircle({
         duration = 10000,
         position = 'bottom',
-        label = 'Completing the task..',
+        label = 'Completando a tarefa...',
         useWhileDead = false,
         canCancel = false,
         disable = { move = true, car = true, mouse = false, combat = true, },
@@ -129,7 +129,7 @@ local function repairSpot()
         if success then
             RemoveBlip(JobBlip)
             activeJob = false
-            DoNotification('Job complete. Wait for your next task.', 'success')
+            DoNotification('Trabalho completo. Aguarde sua próxima tarefa.', 'success')
         end
     end
 end
@@ -148,7 +148,7 @@ function NextDelivery(data)
     SetBlipRouteColour(JobBlip, 3)
     SetBlipFlashes(JobBlip, true)
     BeginTextCommandSetBlipName("STRING")
-    AddTextComponentSubstringPlayerName("City Worker Task")
+    AddTextComponentSubstringPlayerName("Tarefa principal")
     EndTextCommandSetBlipName(JobBlip)
 
     exports['qb-target']:AddCircleZone('workBox', vec3(currentLoc.x, currentLoc.y, currentLoc.z), 1.3,{
@@ -158,7 +158,7 @@ function NextDelivery(data)
     }, { options = {
         { 
             icon = 'fa-solid fa-hammer', 
-            label = 'Repair',
+            label = 'Reparar',
             action = function() 
                 repairSpot()
             end,
@@ -167,7 +167,7 @@ function NextDelivery(data)
     })
 
     activeJob = true
-    DoNotification('You have been assigned a new task.', 'success')
+    DoNotification('Você recebeu uma nova tarefa.', 'success')
     PlaySoundFrontend(-1, "Text_Arrive_Tone", "Phone_SoundSet_Default", 1)
 end
 

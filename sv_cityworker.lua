@@ -54,7 +54,7 @@ lib.callback.register('randol_cityworker:server:Payment', function(source)
     end
     
     AddMoney(Player, Server.Account, players[src].payment)	
-    DoNotification(src, ('You received $%s. Please wait for your next delivery!'):format(players[src].payment), "success")
+    DoNotification(src, ('Você recebeu R$ %s. Aguarde sua próxima entrega!'):format(players[src].payment), "success")
 
     CreateThread(function()
         local vehicle = players[src].entity
