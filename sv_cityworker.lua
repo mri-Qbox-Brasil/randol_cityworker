@@ -53,7 +53,8 @@ lib.callback.register('randol_cityworker:server:Payment', function(source)
         return false
     end
     
-    AddMoney(Player, Server.Account, players[src].payment)	
+    AddMoney(Player, Server.Account, players[src].payment)
+    exports["cw-rep"]:updateSkill(src, "cityworker", 5)
     DoNotification(src, ('Você recebeu R$ %s. Aguarde sua próxima entrega!'):format(players[src].payment), "success")
 
     CreateThread(function()
